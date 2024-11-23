@@ -15,4 +15,13 @@ export interface ITransitionForm {
   type: string;
   category: string;
   amount: number;
+  data?: string;
+}
+
+export interface ITransition extends ITransitionForm {
+  id: string;
+}
+
+export interface APITransition {
+  [id: string] : ITransition;
 }

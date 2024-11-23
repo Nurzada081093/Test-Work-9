@@ -11,19 +11,29 @@ import { Container } from '@mui/joy';
 import { NavLink } from 'react-router-dom';
 import ModalWindow from '../ModalWindow/ModalWindow.tsx';
 import TransactionForm from '../TransactionForm/TransactionForm.tsx';
+import { useAppDispatch } from '../../app/hooks.ts';
+import { ITransitionForm } from '../../types';
+import { toast } from 'react-toastify';
+import { createTransaction, getTransitions } from '../../store/Thunks/transitionsThunks.ts';
 
 const ToolBar = () => {
   const [color, setColor] = useState<ColorPaletteProp>('primary');
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const closeModal = () => {
     setOpenModal(false);
   };
 
+  const addOrEditTransition = async (newTransaction: ITransitionForm) => {
+    await dispatch(createTransaction(newTransaction));
+    toast.success(`This transition has been successfully added`);
+    await dispatch(getTransitions());
+  };
   return (
     <>
       <ModalWindow showModal={openModal} closeModal={closeModal}>
-        <TransactionForm/>
+        <TransactionForm addOrEditTransition={addOrEditTransition}/>
       </ModalWindow>
       <Sheet
         variant="solid"
@@ -80,7 +90,7 @@ const ToolBar = () => {
           <Box sx={{display: 'flex', flexShrink: 0, gap: 2, alignItems: 'center'}}>
             <NavLink to={'/categories'} style={{color: 'white', fontSize: '20px', textDecoration: 'none'}}>Categories</NavLink>
             <NavLink to={''}  style={{color: 'white', fontSize: '20px', textDecoration: 'none'}} onClick={() => setOpenModal(true)}>Add</NavLink>
-            <Badge badgeContent={0} variant="solid" color="danger" to={'/admin/orders'} component={NavLink}>
+            <Badge badgeContent={0} variant="solid" color="danger">
               <IconButton variant="soft" sx={{borderRadius: '50%'}}>
                 <NotificationsIcon/>
               </IconButton>

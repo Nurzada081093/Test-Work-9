@@ -13,10 +13,15 @@ import Grid from '@mui/material/Grid2';
 import FormControl from '@mui/material/FormControl';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { allCategories } from '../../store/Slices/categoriesSlices.ts';
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { getCategories } from '../../store/Thunks/categoriesThunks.ts';
 import { ITransitionForm } from '../../types';
 import { toast } from 'react-toastify';
+
+interface initialTransaction {
+  addOrEditTransition: (transition: ITransitionForm) => void;
+
+}
 
 const initialTransactionState = {
   type: '',
@@ -24,7 +29,7 @@ const initialTransactionState = {
   amount: 0,
 };
 
-const TransactionForm = () => {
+const TransactionForm: React.FC<initialTransaction> = ({addOrEditTransition}) => {
   const [newTransaction, setNewTransaction] = useState<ITransitionForm>(initialTransactionState);
   const categories = useAppSelector(allCategories);
   const dispatch = useAppDispatch();
@@ -57,11 +62,15 @@ const TransactionForm = () => {
       toast.error('If you want to add a new transaction, please fill out all fields!');
       toast.error('The amount of the transition should be more than 0!');
     } else {
-      console.log(newTransaction);
+      addOrEditTransition({
+        ...newTransaction,
+        amount: Number(newTransaction.amount),
+        data: (new Date()).toString(),
+      });
     }
 
+    setNewTransaction(initialTransactionState);
   };
-
 
   return (
     <form onSubmit={onSubmitTransition} style={{
