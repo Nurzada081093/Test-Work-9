@@ -12,6 +12,7 @@ import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { deleteTransaction, getOneTransaction, getTransitions } from '../../../store/Thunks/transitionsThunks.ts';
 import { toast } from 'react-toastify';
+import DeleteButtonSpinner from '../../UI/DeleteButtonSpinner/DeleteButtonSpinner.tsx';
 
 interface Props {
   transaction: ITransition;
@@ -20,13 +21,17 @@ interface Props {
 const TransactionCard: React.FC<Props> = ({transaction}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  // const categoryFromAPI = useAppSelector(oneCategory);
+  const [deleteLoading, setDeleteLoading] = useState<{index: string | null; loading: boolean}>({
+    index: null,
+    loading: false,
+  });
 
   const deleteTheTransaction = async (id: string) => {
-    console.log(id);
+    setDeleteLoading(prevState => ({...prevState, loading: true, index: id}));
     await dispatch(deleteTransaction(id));
     toast.success(`The transaction has been successfully deleted!`);
     await dispatch(getTransitions());
+    setDeleteLoading(prevState => ({...prevState, loading: false, index: null}));
   };
 
   const editTheTransaction = async (id: string) => {
@@ -77,7 +82,9 @@ const TransactionCard: React.FC<Props> = ({transaction}) => {
           }}>
             <Typography sx={{ fontSize: '20px', fontWeight: '600', color: `${transaction.type === 'expense' ? 'red' : 'green'}`}}>{transaction.type === 'expense' ? `- ${transaction.amount}` : `+ ${transaction.amount}`} KGS</Typography>
             <Button sx={{backgroundColor: '#3949ab', fontSize: '18px'}} onClick={() => editTheTransaction(transaction.id)}><CiEdit /></Button>
-            <Button sx={{backgroundColor: '#3949ab', fontSize: '18px'}} onClick={() => deleteTheTransaction(transaction.id)}><RiDeleteBin5Fill /></Button>
+            <Button disabled={deleteLoading.loading && transaction.id === deleteLoading.index} sx={{backgroundColor: '#3949ab', fontSize: '18px'}} onClick={() => deleteTheTransaction(transaction.id)}>
+              <RiDeleteBin5Fill />
+              {deleteLoading.loading && transaction.id === deleteLoading.index ? <DeleteButtonSpinner/> : null}</Button>
           </Box>
         </Box>
       </Card>
