@@ -10,3 +10,9 @@ export interface ICategory extends ICategoryForm {
 export interface APICategory {
   [id: string] : ICategory;
 }
+
+export interface ITransitionForm {
+  type: string;
+  category: string;
+  amount: number;
+}

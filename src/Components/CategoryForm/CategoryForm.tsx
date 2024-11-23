@@ -39,7 +39,7 @@ const CategoryForm:React.FC<ICategoryProps> = ({editOrCreateCategory, oneCategor
     });
   };
 
-  const onSubmitMeal = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (newCategory.name.trim().length === 0 || newCategory.type.trim().length === 0) {
@@ -51,7 +51,7 @@ const CategoryForm:React.FC<ICategoryProps> = ({editOrCreateCategory, oneCategor
   };
 
   return (
-    <form onSubmit={onSubmitMeal} style={{
+    <form onSubmit={onSubmit} style={{
       width: '100%',
       padding: '20px 0',
       margin: '0 auto',
