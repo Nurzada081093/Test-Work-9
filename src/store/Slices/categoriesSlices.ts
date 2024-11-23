@@ -37,6 +37,10 @@ const initialState: IInitial = {
 
 export const allCategories = (state: RootState) => state.categories.categories;
 export const oneCategory = (state: RootState) => state.categories.category;
+export const createLoadingSlice = (state: RootState) => state.categories.loadings.createLoading;
+export const getLoadingSlice = (state: RootState) => state.categories.loadings.getLoading;
+export const editLoadingSlice = (state: RootState) => state.categories.loadings.editLoading;
+export const oneLoadingSlice = (state: RootState) => state.categories.loadings.oneCategoryLoading;
 
 
 const categoriesSlice = createSlice({

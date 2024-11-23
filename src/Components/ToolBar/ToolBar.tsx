@@ -21,14 +21,14 @@ const ToolBar = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
-  const closeModal = () => {
+  const closeModal = async () => {
     setOpenModal(false);
+    await dispatch(getTransitions());
   };
 
   const addOrEditTransition = async (newTransaction: ITransitionForm) => {
     await dispatch(createTransaction(newTransaction));
     toast.success(`This transition has been successfully added`);
-    await dispatch(getTransitions());
   };
   return (
     <>

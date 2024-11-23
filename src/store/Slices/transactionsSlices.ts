@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { createTransaction, getTransitions } from '../Thunks/transitionsThunks.ts';
+import {
+  createTransaction,
+  deleteTransaction,
+  getOneTransaction,
+  getTransitions
+} from '../Thunks/transitionsThunks.ts';
 import { ITransition } from '../../types';
 import { RootState } from '../../app/store.ts';
 
@@ -9,6 +14,8 @@ interface InterfaceInitial {
   loadings: {
     createLoading: boolean;
     getLoading: boolean;
+    deleteLoading: boolean;
+    oneTransactionLoading: boolean;
   },
   error: boolean;
 }
@@ -19,11 +26,15 @@ const initialState: InterfaceInitial = {
   loadings: {
     createLoading: false,
     getLoading: false,
+    deleteLoading: false,
+    oneTransactionLoading: false,
   },
   error: false,
 };
 
 export const allTransitions = (state: RootState) => state.transactions.transactions;
+export const createLoadingSlice = (state: RootState) => state.transactions.loadings.createLoading;
+export const getLoadingSlice = (state: RootState) => state.transactions.loadings.getLoading;
 
 const transactionsSlices = createSlice({
   name: 'transactions',
@@ -54,6 +65,30 @@ const transactionsSlices = createSlice({
       })
       .addCase(getTransitions.rejected, (state) => {
         state.loadings.getLoading = false;
+        state.error = true;
+      })
+      .addCase(deleteTransaction.pending, (state) => {
+        state.loadings.deleteLoading = true;
+        state.error = false;
+      })
+      .addCase(deleteTransaction.fulfilled, (state) => {
+        state.loadings.deleteLoading = false;
+        state.error = false;
+      })
+      .addCase(deleteTransaction.rejected, (state) => {
+        state.loadings.deleteLoading = false;
+        state.error = true;
+      })
+      .addCase(getOneTransaction.pending, (state) => {
+        state.loadings.oneTransactionLoading = true;
+        state.error = false;
+      })
+      .addCase(getOneTransaction.fulfilled, (state) => {
+        state.loadings.oneTransactionLoading = false;
+        state.error = false;
+      })
+      .addCase(getOneTransaction.rejected, (state) => {
+        state.loadings.oneTransactionLoading = false;
         state.error = true;
       });
 

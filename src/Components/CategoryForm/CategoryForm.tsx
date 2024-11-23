@@ -14,6 +14,9 @@ import Grid from '@mui/material/Grid2';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { ICategoryForm } from '../../types';
 import { toast } from 'react-toastify';
+import { useAppSelector } from '../../app/hooks.ts';
+import { createLoadingSlice, editLoadingSlice } from '../../store/Slices/categoriesSlices.ts';
+import ButtonSpinner from '../UI/ButtonSpinner/ButtonSpinner.tsx';
 
 interface ICategoryProps {
   editOrCreateCategory: (category: ICategoryForm) => void;
@@ -28,6 +31,8 @@ const initialCategoryState = {
 
 const CategoryForm:React.FC<ICategoryProps> = ({editOrCreateCategory, oneCategory = initialCategoryState, theCategory = false}) => {
   const [newCategory, setNewCategory] = useState<ICategoryForm>(oneCategory);
+  const addLoading = useAppSelector(createLoadingSlice);
+  const editLoading = useAppSelector(editLoadingSlice);
 
   const onChange = (e: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -94,14 +99,13 @@ const CategoryForm:React.FC<ICategoryProps> = ({editOrCreateCategory, oneCategor
         <Grid size={12}>
           <Box sx={{textAlign: 'center'}}>
             <Button
-              // disabled={isLoading}
+              disabled={addLoading}
               type="submit" variant="contained"
                     sx={{fontWeight: 'bold', width: '200px', height: '50px', textAlign: 'center'}}>
               <span>
                 Save
-                {/*{isMeal ? 'Edit' : 'Add'}*/}
               </span>
-              {/*{isLoading ? <ButtonLoadingStyle/> : null}.*/}
+              {addLoading || editLoading ? <ButtonSpinner/> : null}
             </Button>
           </Box>
         </Grid>

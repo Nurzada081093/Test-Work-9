@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './Containers/Home/Home.tsx';
 import CategoriesPage from './Containers/CategoriesPage/CategoriesPage.tsx';
 import { Typography } from '@mui/material';
+import './App.css';
 
 const App = () => {
 

@@ -17,6 +17,8 @@ import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 
 import { getCategories } from '../../store/Thunks/categoriesThunks.ts';
 import { ITransitionForm } from '../../types';
 import { toast } from 'react-toastify';
+import { createLoadingSlice } from '../../store/Slices/transactionsSlices.ts';
+import ButtonSpinner from '../UI/ButtonSpinner/ButtonSpinner.tsx';
 
 interface initialTransaction {
   addOrEditTransition: (transition: ITransitionForm) => void;
@@ -29,9 +31,11 @@ const initialTransactionState = {
   amount: 0,
 };
 
+
 const TransactionForm: React.FC<initialTransaction> = ({addOrEditTransition}) => {
   const [newTransaction, setNewTransaction] = useState<ITransitionForm>(initialTransactionState);
   const categories = useAppSelector(allCategories);
+  const addLoading = useAppSelector(createLoadingSlice);
   const dispatch = useAppDispatch();
 
   const income = categories.filter(item => item.type === 'income');
@@ -47,7 +51,7 @@ const TransactionForm: React.FC<initialTransaction> = ({addOrEditTransition}) =>
   }, [getAllCategories]);
 
   const onChangeTransition = (e: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setNewTransaction((prevState) => {
       return {
         ...prevState,
@@ -119,7 +123,7 @@ const TransactionForm: React.FC<initialTransaction> = ({addOrEditTransition}) =>
               {newTransaction.type === 'income' ?
                 income.map((category) => (
                   <MenuItem key={category.id} value={category.name}>{category.name}</MenuItem>
-              )) :
+                )) :
                 expense.map((category) => (
                   <MenuItem key={category.id} value={category.name}>{category.name}</MenuItem>
                 ))
@@ -142,14 +146,13 @@ const TransactionForm: React.FC<initialTransaction> = ({addOrEditTransition}) =>
         <Grid size={12}>
           <Box sx={{textAlign: 'center'}}>
             <Button
-              // disabled={isLoading}
+              disabled={addLoading}
               type="submit" variant="contained"
               sx={{fontWeight: 'bold', width: '200px', height: '50px', textAlign: 'center'}}>
               <span>
                 Save
-                {/*{isMeal ? 'Edit' : 'Add'}*/}
               </span>
-              {/*{isLoading ? <ButtonLoadingStyle/> : null}.*/}
+              {addLoading ? <ButtonSpinner/> : null}.
             </Button>
           </Box>
         </Grid>
