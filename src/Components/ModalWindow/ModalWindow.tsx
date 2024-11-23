@@ -1,15 +1,15 @@
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import { ModalClose } from '@mui/joy';
-import React from 'react';
-import CategoryForm from '../CategoryForm/CategoryForm.tsx';
+import React, { ReactNode } from 'react';
 
 interface Props {
   showModal: boolean;
   closeModal: () => void;
+  children: ReactNode
 }
 
-const CategoryModal:React.FC<Props> = ({showModal, closeModal}) => {
+const ModalWindow:React.FC<Props> = ({showModal, closeModal, children}) => {
   return (
     <Modal open={showModal} onClose={closeModal}>
       <ModalDialog
@@ -28,10 +28,10 @@ const CategoryModal:React.FC<Props> = ({showModal, closeModal}) => {
         })}
       >
         <ModalClose />
-        <CategoryForm/>
+        {children}
       </ModalDialog>
     </Modal>
   );
 };
 
-export default CategoryModal;
+export default ModalWindow;

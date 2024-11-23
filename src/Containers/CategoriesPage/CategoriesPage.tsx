@@ -4,7 +4,8 @@ import Box from '@mui/joy/Box';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/joy/Button';
 import { useState } from 'react';
-import CategoryModal from '../../Components/CategoryModal/CategoryModal.tsx';
+import ModalWindow from '../../Components/ModalWindow/ModalWindow.tsx';
+import CategoryForm from '../../Components/CategoryForm/CategoryForm.tsx';
 
 const CategoriesPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -15,7 +16,9 @@ const CategoriesPage = () => {
 
   return (
     <>
-      <CategoryModal showModal={openModal} closeModal={closeModal}/>
+      <ModalWindow showModal={openModal} closeModal={closeModal}>
+        <CategoryForm/>
+      </ModalWindow>
       <Container>
         <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', margin: '50px 0 20px'}}>
           <Typography variant="h3">Categories</Typography>

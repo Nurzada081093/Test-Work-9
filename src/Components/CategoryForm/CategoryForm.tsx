@@ -12,15 +12,19 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { ICategory } from '../../types';
+import { ICategoryForm } from '../../types';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from '../../app/hooks.ts';
+import { createCategory } from '../../store/Thunks/categoriesThunks.ts';
 
-const categoryState = {
+const initialCategoryState = {
   type: '',
   name: '',
 };
 
 const CategoryForm = () => {
-  const [newCategory, setNewCategory] = useState<ICategory>(categoryState);
+  const [newCategory, setNewCategory] = useState<ICategoryForm>(initialCategoryState);
+  const dispatch = useAppDispatch();
 
   const onChange = (e: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -32,10 +36,16 @@ const CategoryForm = () => {
     });
   };
 
-  const onSubmitMeal = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmitMeal = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(newCategory);
 
+    if (newCategory.name.trim().length === 0 || newCategory.type.trim().length === 0) {
+      toast.error('If you want to add a new category, please fill out all fields!');
+    } else {
+      await dispatch(createCategory(newCategory));
+      toast.success(`This category has been successfully added`);
+      setNewCategory(initialCategoryState);
+    }
   };
 
   return (
