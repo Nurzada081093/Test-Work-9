@@ -11,20 +11,23 @@ import {
   Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { ICategoryForm } from '../../types';
 import { toast } from 'react-toastify';
-import { useAppDispatch } from '../../app/hooks.ts';
-import { createCategory } from '../../store/Thunks/categoriesThunks.ts';
+
+interface ICategoryProps {
+  editOrCreateCategory: (category: ICategoryForm) => void;
+  oneCategory?: ICategoryForm;
+  theCategory?: boolean;
+}
 
 const initialCategoryState = {
   type: '',
   name: '',
 };
 
-const CategoryForm = () => {
-  const [newCategory, setNewCategory] = useState<ICategoryForm>(initialCategoryState);
-  const dispatch = useAppDispatch();
+const CategoryForm:React.FC<ICategoryProps> = ({editOrCreateCategory, oneCategory = initialCategoryState, theCategory = false}) => {
+  const [newCategory, setNewCategory] = useState<ICategoryForm>(oneCategory);
 
   const onChange = (e: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -42,8 +45,7 @@ const CategoryForm = () => {
     if (newCategory.name.trim().length === 0 || newCategory.type.trim().length === 0) {
       toast.error('If you want to add a new category, please fill out all fields!');
     } else {
-      await dispatch(createCategory(newCategory));
-      toast.success(`This category has been successfully added`);
+      editOrCreateCategory({...newCategory});
       setNewCategory(initialCategoryState);
     }
   };
@@ -57,8 +59,7 @@ const CategoryForm = () => {
       backgroundColor: 'transparent'
     }}>
       <Typography variant="h4" sx={{flexGrow: 1, textAlign: 'center', marginBottom: '20px'}}>
-        Add new category
-        {/*{editDish ? 'Edit ' : 'Add new '} dish*/}
+        {theCategory ? 'Edit ' : 'Add new '} category
       </Typography>
       <Grid container spacing={2} sx={{mx: 'auto', width: '80%'}}>
         <Grid size={12}>
